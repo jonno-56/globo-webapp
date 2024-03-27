@@ -1,14 +1,12 @@
 locals {
   host_list_ssm_name = "/${local.name_prefix}/host-list"
   site_name_ssm_name = "/${local.name_prefix}/site-name"
-
 }
 
 resource "aws_ssm_parameter" "host_list" {
   name  = local.host_list_ssm_name
   type  = "StringList"
   value = join(",", aws_instance.main.*.private_dns)
-
 }
 
 resource "aws_ssm_parameter" "site_name" {
@@ -20,7 +18,7 @@ resource "aws_ssm_parameter" "site_name" {
 data "aws_iam_policy_document" "ssm_access" {
   statement {
     effect    = "Allow"
-    actions   = ["ssm.GetParameter"]
+    actions   = ["ssm:GetParameter"]
     resources = [aws_ssm_parameter.host_list.arn, aws_ssm_parameter.site_name.arn]
   }
 }
